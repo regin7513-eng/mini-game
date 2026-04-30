@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chou Freestyle Simulator</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            background-color: #1e1e1e; 
+            color: white; 
+            margin-top: 50px; 
+        }
+        .game-container { 
+            border: 2px solid #ffeb3b; 
+            padding: 20px; 
+            width: 320px; 
+            margin: auto; 
+            border-radius: 10px; 
+            background-color: #333; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+        .health-bar-container { 
+            width: 100%; 
+            background-color: #555; 
+            border-radius: 5px; 
+            margin: 10px 0; 
+        }
+        .health-bar { 
+            height: 20px; 
+            background-color: #f44336; 
+            width: 100%; 
+            border-radius: 5px; 
+            transition: width 0.3s ease-in-out; 
+        }
+        button { 
+            margin: 5px; 
+            padding: 10px 15px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 5px; 
+            width: 90%;
+        }
+        .btn-attack { background-color: #ff9800; color: white; }
+        .btn-skill1 { background-color: #2196F3; color: white; }
+        .btn-ult { background-color: #e91e63; color: white; }
+        button:hover { opacity: 0.8; transform: scale(1.02); }
+        #status { margin-top: 15px; font-style: italic; min-height: 40px; }
+    </style>
+</head>
+<body>
+
+    <h1>Mini Game: Chou vs Minion</h1>
+    
+    <div class="game-container">
+        <h3>HP Minion</h3>
+        <div class="health-bar-container">
+            <div id="health" class="health-bar"></div>
+        </div>
+        <p id="hp-text">100 / 100</p>
+
+        <div>
+            <button class="btn-attack" onclick="attack(10, 'Pukulan Biasa')">Basic Attack</button>
+            <button class="btn-skill1" onclick="attack(25, 'Jeet Kune Do!')">Skill 1 (Jeet Kune Do)</button>
+            <button class="btn-ult" onclick="attack(50, 'The Way of Dragon!!')">Ultimate (Way of Dragon)</button>
+        </div>
+
+        <p id="status">Siap bertarung, bro!</p>
+        <button onclick="resetGame()" style="margin-top:10px; background-color: gray; color: white;">Reset Game</button>
+    </div>
+
+    <script>
+        let enemyHP = 100;
+
+        function attack(damage, skillName) {
+            // Kalau HP sudah habis, hentikan fungsi
+            if (enemyHP <= 0) return; 
+
+            // Kurangi HP musuh
+            enemyHP -= damage;
+            if (enemyHP < 0) enemyHP = 0;
+
+            // Update tampilan Bar Merah dan Angka
+            document.getElementById('health').style.width = enemyHP + '%';
+            document.getElementById('hp-text').innerText = enemyHP + ' / 100';
+            
+            // Update teks status serangan
+            let statusText = "Kamu mengeluarkan " + skillName + "!<br>(Damage: " + damage + ")";
+            
+            if (enemyHP === 0) {
+                statusText += "<br><strong style='color:#ffeb3b;'>Minion K.O! Freestyle sukses!</strong>";
+            }
+            
+            document.getElementById('status').innerHTML = statusText;
+        }
+
+        function resetGame() {
+            enemyHP = 100;
+            document.getElementById('health').style.width = '100%';
+            document.getElementById('hp-text').innerText = '100 / 100';
+            document.getElementById('status').innerText = "Siap bertarung lagi!";
+        }
+    </script>
+</body>
+</html>
