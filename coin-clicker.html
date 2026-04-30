@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coin Clicker - Koleksi Harta!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .game-title {
+            font-size: 24px;
+            color: #ffd700;
+            text-shadow: 0 0 10px #ffd700, 0 0 20px #ff8c00;
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #ffd700, 0 0 20px #ff8c00; }
+            to { text-shadow: 0 0 20px #ffd700, 0 0 40px #ff8c00, 0 0 60px #ffd700; }
+        }
+        
+        .coin-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        
+        .coin-container:active {
+            transform: scale(0.95);
+        }
+        
+        .coin {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 
+                0 0 30px #ffd700,
+                inset 0 0 20px rgba(255,255,255,0.5),
+                inset 0 0 10px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: #8b6914;
+            border: 8px solid #daa520;
+            animation: spin 3s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: translate(-50%, -50%) rotateY(0deg); }
+            to { transform: translate(-50%, -50%) rotateY(360deg); }
+        }
+        
+        .coin:hover {
+            animation: spin 0.5s linear infinite;
+        }
+        
+        .score-board {
+            background: linear-gradient(180deg, #2d2d44 0%, #1a1a2e 100%);
+            border: 4px solid #ffd700;
+            border-radius: 15px;
+            padding: 20px 40px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255,215,0,0.3);
+        }
+        
+        .score {
+            font-size: 32px;
+            color: #ffd700;
+            text-shadow: 2px 2px 0 #000;
+        }
+        
+        .label {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 5px;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            color: #00ff88;
+        }
+        
+        .stat-label {
+            font-size: 8px;
+            color: #888;
+            margin-top: 3px;
+        }
+        
+        .upgrades {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 500px;
+        }
+        
+        .upgrade-btn {
+            background: linear-gradient(180deg, #4a4a6a 0%, #2d2d44 100%);
+            border: 3px solid #6a6a8a;
+            border-radius: 10px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 140px;
+        }
+        
+        .upgrade-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            border-color: #ffd700;
+        }
+        
+        .upgrade-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .upgrade-btn .name {
+            font-size: 10px;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        
+        .upgrade-btn .cost {
+            font-size: 12px;
+            color: #ffd700;
+        }
+        
+        .upgrade-btn .level {
+            font-size: 8px;
+            color: #00ff88;
+            margin-top: 3px;
+        }
+        
+        .click-effect {
+            position: absolute;
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffd700;
+            pointer-events: none;
+            animation: floatUp 1s ease-out forwards;
+            text-shadow: 2px 2px 0 #000;
+        }
+        
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-100px) scale(1.5); }
+        }
+        
+        .achievement {
+            position: fixed;
+            top: 20px;
+            right: -300px;
+            background: linear-gradient(90deg, #ffd700, #ff8c00);
+            color: #000;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 12px;
+            animation: slideIn 3s ease-out forwards;
+            z-index: 100;
+        }
+        
+        @keyframes slideIn {
+            0% { right: -300px; }
+            10% { right: 20px; }
+            90% { right: 20px; }
+            100% { right: -300px; }
+        }
+        
+        .combo-display {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            color: #ff0000;
+            text-shadow: 0 0 20px #ff0000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .combo-display.show {
+            animation: comboPop 0.5s ease-out;
+        }
+        
+        @keyframes comboPop {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+            50% { transform: translate(-50%, -50%) scale(1.3); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="game-title">🪙 COIN CLICKER 🪙</h1>
+    
+    <div class="coin-container" onclick="clickCoin(event)">
+        <div class="coin">$</div>
+    </div>
+    
+    <div class="score-board">
+        <div class="label">TOTAL COIN</div>
+        <div class="score" id="score">0</div>
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="perClick">1</div>
+                <div class="stat-label">PER CLICK</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="perSecond">0</div>
+                <div class="stat-label">PER SECOND</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="upgrades">
+        <button class="upgrade-btn" id="upgrade1" onclick="buyUpgrade(1)">
+            <div class="name">👆 Finger Power</div>
+            <div class="cost">💰 10</div>
+            <div class="level">Lv. <span id="lv1">0</span></div>
+        </button>
+        <button class="upgrade-btn" id="upgrade2" onclick="buyUpgrade(2)">
+            <div class="name">⚡ Auto Clicker</div>
+            <div class="cost">💰 50</div>
+            <div class="level">Lv. <span id="lv2">0</span></div>
+        </button>
+        <button class="upgrade-btn" id="upgrade3" onclick="buyUpgrade(3)">
+            <div class="name">💎 Lucky Boost</div>
+            <div class="cost">💰 100</div>
+            <div class="level">Lv. <span id="lv3">0</span></div>
+        </button>
+        <button class="upgrade-btn" id="upgrade4" onclick="buyUpgrade(4)">
+            <div class="name">🔥 Fire Multi</div>
+            <div class="cost">💰 500</div>
+            <div class="level">Lv. <span id="lv4">0</span></div>
+        </button>
+    </div>
+    
+    <div class="combo-display" id="combo"></div>
+
+    <script>
+        let score = 0;
+        let perClick = 1;
+        let perSecond = 0;
+        let clickCombo = 0;
+        let comboTimer = null;
+        
+        // Upgrade levels
+        let upgrades = {
+            1: { level: 0, cost: 10, name: 'Finger Power', bonus: 1 },
+            2: { level: 0, cost: 50, name: 'Auto Clicker', bonus: 2 },
+            3: { level: 0, cost: 100, name: 'Lucky Boost', bonus: 0.5 },
+            4: { level: 0, cost: 500, name: 'Fire Multi', bonus: 2 }
+        };
+        
+        function clickCoin(event) {
+            // Calculate bonus
+            let clickValue = perClick;
+            let luckyBonus = 1 + (upgrades[3].level * upgrades[3].bonus);
+            clickValue = Math.floor(clickValue * luckyBonus);
+            
+            // Fire multiplier
+            if (upgrades[4].level > 0) {
+                clickValue *= (1 + upgrades[4].level * 0.5);
+            }
+            
+            clickValue = Math.floor(clickValue);
+            score += clickValue;
+            
+            // Combo system
+            clickCombo++;
+            clearTimeout(comboTimer);
+            comboTimer = setTimeout(() => {
+                clickCombo = 0;
+            }, 1000);
+            
+            // Show combo
+            if (clickCombo >= 5) {
+                showCombo(clickCombo + 'x COMBO!');
+            }
+            
+            // Create floating number
+            createClickEffect(event, clickValue);
+            
+            updateDisplay();
+            checkAchievements();
+        }
+        
+        function createClickEffect(event, value) {
+            const effect = document.createElement('div');
+            effect.className = 'click-effect';
+            effect.textContent = '+' + value;
+            effect.style.left = (event.clientX - 20 + Math.random() * 40) + 'px';
+            effect.style.top = (event.clientY - 20 + Math.random() * 40) + 'px';
+            document.body.appendChild(effect);
+            
+            setTimeout(() => effect.remove(), 1000);
+        }
+        
+        function showCombo(text) {
+            const combo = document.getElementById('combo');
+            combo.textContent = text;
+            combo.classList.remove('show');
+            void combo.offsetWidth;
+            combo.classList.add('show');
+        }
+        
+        function buyUpgrade(id) {
+            const up = upgrades[id];
+            if (score >= up.cost) {
+                score -= up.cost;
+                up.level++;
+                up.cost = Math.floor(up.cost * 1.5);
+                
+                // Apply upgrade effects
+                if (id === 1) {
+                    perClick += up.bonus;
+                } else if (id === 2) {
+                    perSecond += up.bonus;
+                }
+                
+                document.getElementById('lv' + id).textContent = up.level;
+                document.getElementById('upgrade' + id).querySelector('.cost').textContent = '💰 ' + up.cost;
+                
+                updateDisplay();
+            }
+        }
+        
+        function updateDisplay() {
+            document.getElementById('score').textContent = formatNumber(score);
+            document.getElementById('perClick').textContent = formatNumber(perClick);
+            document.getElementById('perSecond').textContent = formatNumber(perSecond);
+            
+            // Update button states
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById('upgrade' + i).disabled = score < upgrades[i].cost;
+            }
+        }
+        
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return Math.floor(num);
+        }
+        
+        // Auto clicker
+        setInterval(() => {
+            if (perSecond > 0) {
+                score += perSecond;
+                updateDisplay();
+            }
+        }, 1000);
+        
+        // Achievements
+        let achievements = [100, 1000, 10000, 100000];
+        let achieved = [];
+        
+        function checkAchievements() {
+            achievements.forEach((target, index) => {
+                if (score >= target && !achieved.includes(index)) {
+                    achieved.push(index);
+                    showAchievement('🎉 Achievement: ' + formatNumber(target) + ' coins!');
+                }
+            });
+        }
+        
+        function showAchievement(text) {
+            const ach = document.createElement('div');
+            ach.className = 'achievement';
+            ach.textContent = text;
+            document.body.appendChild(ach);
+            setTimeout(() => ach.remove(), 3000);
+        }
+        
+        // Initialize
+        updateDisplay();
+    </script>
+</body>
+</html>
